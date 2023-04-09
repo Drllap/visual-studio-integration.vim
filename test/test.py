@@ -6,11 +6,24 @@ def reload():
     reload(VS_wrapper)
     reload(Vim_wrapper)
 
+    #  global vim_vs_wrap
+    #  vim_vs_wrap = Vim_wrapper.Vim_wrapper()
 
+    #  vim_vs_wrap.set_solution()
 
-#  Vim_wrapper.Vim_wrapper()
-#  Vim_wrapper.set_solution()
-Vim_wrapper.activate()
+reload()
+
+#  if 'vim_vs_wrap' not in globals():
+    #  print("creating vim_vs_wrap")
+    #  global vim_vs_wrap
+    #  vim_vs_wrap = Vim_wrapper.Vim_wrapper()
+
+vim_vs_wrap = Vim_wrapper.Vim_wrapper()
+#  vim_vs_wrap.open_current()
+
+#  vim_vs_wrapper.set_solution()
+#  vim_vs_wrap.activate()
+#  vim_vs_wrap.set_focus()
 #  w.open_current()
 #  print(Vim_wrapper.__dict__)
 

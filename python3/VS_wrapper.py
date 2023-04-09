@@ -11,12 +11,15 @@ class Instance:
     def activate(self):
         self.dte.MainWindow.Activate
 
-    def open_location(self, file, line=None, row=None):
+    def set_focus(self):
+        self.dte.MainWindow.SetFocus
+
+    def open_location(self, file, line=None, col=None):
         import os
         self.dte.ItemOperations.OpenFile(os.path.abspath(file))
         if line is not None:
-            row = row or 1
-            self.dte.ActiveDecument.Selection.MoveToLineAndOffset(line,row)
+            col = col or 1
+            self.dte.ActiveDocument.Selection.MoveToLineAndOffset(line,col+1)
 
     def get_solution_name(self):
         return str(self.dte.Solution.FullName)
