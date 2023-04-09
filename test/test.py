@@ -19,6 +19,7 @@ reload()
     #  vim_vs_wrap = Vim_wrapper.Vim_wrapper()
 
 vim_vs_wrap = Vim_wrapper.Vim_wrapper()
+vim_vs_wrap.set_startup_project()
 #  vim_vs_wrap.open_current()
 
 #  vim_vs_wrapper.set_solution()

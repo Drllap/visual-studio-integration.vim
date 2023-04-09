@@ -19,7 +19,7 @@ class Instance:
         self.dte.ItemOperations.OpenFile(os.path.abspath(file))
         if line is not None:
             col = col or 1
-            self.dte.ActiveDocument.Selection.MoveToLineAndOffset(line,col+1)
+            self.dte.ActiveDocument.Selection.MoveToLineAndOffset(line, col+1)
 
     def get_solution_name(self):
         return str(self.dte.Solution.FullName)
@@ -33,17 +33,17 @@ class Instance:
     def get_caption(self):
         return self.dte.MainWindow.Caption
 
-    def get_projects(self):
-        pass
+    def get_project_list(self):
+        return [ p for p in self.dte.Solution.Projects ]
 
-    def set_startup_project(self):
-        pass
+    def get_startup_project(self):
+        return self.dte.Solution.Properties("StartupProject").Value
+
+    def set_startup_project(self, project):
+        self.dte.Solution.Properties("StartupProject").Value = project
 
     def start_debugging(self):
         self.dte.Debugger.Go(False)
-
-    #  def get_name(self):
-    #      return self.
 
 def get_instances():
     ret = {}

@@ -7,7 +7,7 @@ endif
 map <leader>R :wa <bar> :messages clear <bar> :py3 reload()<CR>
 map <leader>b :wa <bar> :messages clear <bar> :py3file test/test.py<CR>
 
-command! VSISetSolution :py3 vim_vs_wrap.set_solution()
-command! VSIOpen        :py3 vim_vs_wrap.open_current()
+command! VSISetSolution       :py3 vim_vs_wrap.set_solution()
+command! VSISetStartupProject :py3 vim_vs_wrap.set_startup_project()
+command! VSIOpen              :py3 vim_vs_wrap.open_current()
 
-imap <C-v> :normal :VSIOpen<CR>

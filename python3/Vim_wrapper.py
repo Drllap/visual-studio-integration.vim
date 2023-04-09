@@ -11,33 +11,58 @@ import VS_wrapper
 #      tab_based_config = tab_based
 
 class Vim_wrapper:
+    class NoLink(IndexError):
+        pass
+
     def __init__(self) -> None:
         self.tab_based_config = True
         self.reload()
 
     def open_current(self):
-        inst = self._get_linked_instance()
-        if inst is None:
-            return
-        b = vim.current.buffer
-        file = b.name
-        line, col = vim.current.window.cursor
-        inst.open_location(file, line, col)
+        try:
+            inst = self._get_linked_instance()
+            b = vim.current.buffer
+            file = b.name
+            line, col = vim.current.window.cursor
+            inst.open_location(file, line, col)
+        except Vim_wrapper.NoLink:
+            pass
 
     def reload(self):
         self.instances = VS_wrapper.get_instances()
 
     def activate(self):
-        inst = self._get_linked_instance()
-        if inst is None:
-            return
-        inst.activate()
+        self._forward_to_linked(VS_wrapper.Instance.activate)
 
     def set_focus(self):
-        inst = self._get_linked_instance()
-        if inst is None:
-            return
-        inst.set_focus()
+        self._forward_to_linked(VS_wrapper.Instance.set_focus)
+
+    def start_debugging(self):
+        self._forward_to_linked(VS_wrapper.Instance.start_debugging)
+
+    @staticmethod
+    def _get_format_str(is_current):
+        if is_current:
+            return "\t*{}: {}"
+        return "\t {}: {}"
+
+    def set_startup_project(self):
+        try: 
+            inst = self._get_linked_instance()
+            current_startup_project = inst.get_startup_project()
+            project_list = inst.get_project_list()
+
+            selections_strings = \
+             [ Vim_wrapper._get_format_str(p.Name == current_startup_project).format(idx, p)
+               for idx, p in enumerate(project_list) ]
+            selections_strings.insert(0, "Select Project")
+            selected = vim.funcs.inputlist(selections_strings)
+
+            if selected in range(0, len(project_list)):
+                inst.set_startup_project(project_list[selected])
+
+        except Vim_wrapper.NoLink:
+            pass
 
     def set_solution(self):
         self.instances = VS_wrapper.get_instances()
@@ -57,10 +82,7 @@ class Vim_wrapper:
         select_dict = {}
         counter = 1
         for (key, value) in self.instances.items():
-            if current is not None and current == key:
-                format = "\t*{}: {}"
-            else:
-                format = "\t {}: {}"
+            format = Vim_wrapper._get_format_str(current is not None and current == key)
             text.append(format.format(counter, value.get_solution_name()))
 
             select_dict[counter] = key
@@ -81,8 +103,13 @@ class Vim_wrapper:
         if key in self.instances:
             return self.instances[key]
         print("Linked instance key isn't in instance dict. Run set_solution to re-initialize")
-        return None
+        raise Vim_wrapper.NoLink
 
+    def _forward_to_linked(self, VS_wrapper_mothod):
+        try:
+            VS_wrapper_mothod(self._get_linked_instance())
+        except Vim_wrapper.NoLink:
+            pass
 
     def _set_current_solution(self, value):
         if value is None:

@@ -11,3 +11,8 @@
 - [ ] Select startup project
 - [ ] Break point manipulation
 - [ ] Starting/stepping/stopping debugging
+
+# Current features (check mark means it has been documented):
+- [ ] Link with VS/Solution instance
+- [ ] Open the current file open in Vim in VS
+- [ ] Set the "Startup Project"
