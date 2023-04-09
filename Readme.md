@@ -11,7 +11,7 @@
 # Plugin capabilities TODO: 
 - [x] Select linked VS instance
 - [x] Open current file in VS
-- [ ] Select startup project
+- [x] Select startup project
 - [ ] Break point manipulation
 - [ ] Starting/stepping/stopping debugging
 
