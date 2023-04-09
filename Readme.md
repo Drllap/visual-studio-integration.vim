@@ -4,6 +4,9 @@
 - [ ] Add to this readme
 - [ ] Can I add some unit tests?
 - [ ] Add some readme to the original folder
+- [ ] Better forwarding from Vim_wrapper to VS_wrapper 
+- [ ] Add static wrapper for the vim_vs_wrap
+- [ ] Add health.lua
 
 # Plugin capabilities TODO: 
 - [x] Select linked VS instance
