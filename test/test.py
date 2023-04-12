@@ -18,8 +18,19 @@ reload()
     #  global vim_vs_wrap
     #  vim_vs_wrap = Vim_wrapper.Vim_wrapper()
 
+def fle(a, b, c):
+    print("Multiply: ", a*b*c)
+
+#  fle(1, 2, 3)
+
+def forwarder(func, *args):
+    func(*args)
+
+#  forwarder(fle, 4, 2, 3)
 vim_vs_wrap = Vim_wrapper.Vim_wrapper()
-vim_vs_wrap.set_startup_project()
+vim_vs_wrap.toggle_breakpoint()
+#  vim_vs_wrap.test()
+#  vim_vs_wrap.set_startup_project()
 #  vim_vs_wrap.open_current()
 
 #  vim_vs_wrapper.set_solution()

@@ -1,5 +1,6 @@
 import pythoncom
 import win32com.client
+from enum import Enum
 
 class Instance:
     def __init__(self, dte):
@@ -37,12 +38,56 @@ class Instance:
         return [ p for p in self.dte.Solution.Projects ]
 
     def get_startup_project(self):
-        return self.dte.Solution.Properties("StartupProject").Value
+        return self.dte.Solution.Properties("StartupProject") # Change this back
+
+    @staticmethod
+    def print_properties(properties):
+        print("Properties count: {}".format(properties.count))
+        for i in range(0, properties.Count):
+            try:
+                print("Index: {}, Name: {}, Value {}:".format(i, properties[i].Name, properties[i].Value))
+            except Exception:
+                print("Some Exception. Index: {}, Name: {}".format(i, properties[i].Name))
+
+    @staticmethod
+    def print_with_enum(properties):
+        for p in properties:
+            try:
+                print("Propertie Name: {}, Value: {}".format(p.Name, p.Value))
+            except Exception:
+                print("Propertie Name: {}, Value: {}".format(p.Name, "Error"))
+
+    def test(self):
+        projects = self.get_project_list()
+        for p in projects:
+            print("Name: {}".format(p))
+            #  Instance.print_properties(p.Properties)
+            Instance.print_with_enum(p.Properties)
+
 
     def set_startup_project(self, project):
         self.dte.Solution.Properties("StartupProject").Value = project
 
+    class BP_Toggle_Behaviour(Enum):
+        Disable = 0
+        Remove  = 1
+
+    def toggle_breakpoint(self, file_name, line, toggle_behaviour=BP_Toggle_Behaviour.Remove):
+        for bp in self.dte.Debugger.Breakpoints:
+            if file_name == bp.File and line == bp.FileLine:
+                if toggle_behaviour == Instance.BP_Toggle_Behaviour.Remove:
+                    bp.Delete()
+                elif toggle_behaviour == Instance.BP_Toggle_Behaviour.Disable:
+                    bp.Enabled = not bp.Enabled
+                else:
+                    raise Exception("Breakpoint toggeling behaviour not selected")
+
+                return
+
+        self.dte.Debugger.Breakpoints.Add("", file_name, line)
+
     def start_debugging(self):
+        # TODO Listen to when stoppes in breakpoint
         self.dte.Debugger.Go(False)
 
 def get_instances():

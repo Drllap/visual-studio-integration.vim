@@ -20,11 +20,9 @@ class Vim_wrapper:
 
     def open_current(self):
         try:
-            inst = self._get_linked_instance()
-            b = vim.current.buffer
-            file = b.name
+            file = vim.current.buffer.name
             line, col = vim.current.window.cursor
-            inst.open_location(file, line, col)
+            self._get_linked_instance().open_location(file, line, col)
         except Vim_wrapper.NoLink:
             pass
 
@@ -36,6 +34,13 @@ class Vim_wrapper:
 
     def set_focus(self):
         self._forward_to_linked(VS_wrapper.Instance.set_focus)
+
+    def toggle_breakpoint(self):
+        #  try:
+            #  inst = self._get_linked_instance()
+        file_name = vim.current.buffer.name
+        line, _ = vim.current.window.cursor
+        self._forward_to_linked(VS_wrapper.Instance.toggle_breakpoint, file_name, line) 
 
     def start_debugging(self):
         self._forward_to_linked(VS_wrapper.Instance.start_debugging)
@@ -63,6 +68,9 @@ class Vim_wrapper:
 
         except Vim_wrapper.NoLink:
             pass
+
+    def test(self):
+        return self._forward_to_linked(VS_wrapper.Instance.test)
 
     def set_solution(self):
         self.instances = VS_wrapper.get_instances()
@@ -105,9 +113,9 @@ class Vim_wrapper:
         print("Linked instance key isn't in instance dict. Run set_solution to re-initialize")
         raise Vim_wrapper.NoLink
 
-    def _forward_to_linked(self, VS_wrapper_mothod):
+    def _forward_to_linked(self, VS_wrapper_mothod, *args):
         try:
-            VS_wrapper_mothod(self._get_linked_instance())
+            return VS_wrapper_mothod(self._get_linked_instance(), *args)
         except Vim_wrapper.NoLink:
             pass
 
